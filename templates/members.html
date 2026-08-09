@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="page-container">
+    <div class="page-header">
+        <h1>Members</h1>
+        <p>Manage all registered FitZone member profiles.</p>
+    </div>
+
+    <div class="stats">
+        <div class="stat">
+            <h3>Total Members</h3>
+            <div class="number">{{ members|length }}</div>
+        </div>
+        <div class="stat">
+            <h3>Active Memberships</h3>
+            <div class="number">{{ active_members }}</div>
+        </div>
+        <div class="stat">
+            <h3>Records</h3>
+            <div class="number">{% if members %}Available{% else %}Empty{% endif %}</div>
+        </div>
+        <div class="stat">
+            <h3>Action</h3>
+            <a href="{% url 'member_add' %}" class="button success">Add Member</a>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Member List</h2>
+        {% if members %}
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Mobile</th>
+                            <th>Email</th>
+                            <th>Plan</th>
+                            <th>AI Plan</th>
+                            <th>Joining Date</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for member in members %}
+                            <tr>
+                                <td><strong>{{ member.full_name }}</strong></td>
+                                <td>{{ member.mobile|default:"-" }}</td>
+                                <td>{{ member.email|default:"-" }}</td>
+                                <td>{{ member.plan|default:"-" }}</td>
+                                <td>{{ member.ai_plan|default:"Free" }}</td>
+                                <td>{{ member.joining_date }}</td>
+                                <td>
+                                    {% if member.membership_end_date and member.membership_end_date < today %}
+                                        <span class="status-bad">Expired</span>
+                                    {% else %}
+                                        <span class="status-good">Active</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <div class="actions">
+                                        <a href="{% url 'member_detail' member.pk %}" class="button secondary">View</a>
+                                        <a href="{% url 'member_edit' member.pk %}" class="button">Edit</a>
+                                        <a href="{% url 'member_delete' member.pk %}" class="button danger">Delete</a>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="empty">No members found.</div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

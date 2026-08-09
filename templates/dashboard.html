@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="page-container">
+    <div class="page-header">
+        <h1>FitZone Dashboard</h1>
+        <p>Welcome {{ user.get_full_name|default:user.username }}. Manage members, attendance, payments, equipment and fitness tools from one place.</p>
+    </div>
+
+    <div class="stats">
+        <div class="stat">
+            <h3>Total Members</h3>
+            <div class="number">{{ total_members }}</div>
+        </div>
+        <div class="stat">
+            <h3>Attendance Records</h3>
+            <div class="number">{{ total_attendance }}</div>
+            <p>{{ present_today }} present today</p>
+        </div>
+        <div class="stat">
+            <h3>Payments</h3>
+            <div class="number">{{ total_payments }}</div>
+            <p>Rs. {{ paid_amount }} paid</p>
+        </div>
+        <div class="stat">
+            <h3>Equipment</h3>
+            <div class="number">{{ total_equipment }}</div>
+            <p>{{ active_equipment }} active</p>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Management</h2>
+        <div class="grid">
+            <a href="{% url 'members' %}" class="link-card">
+                <h3>Members</h3>
+                <p>Add, view and update gym members.</p>
+            </a>
+            <a href="{% url 'attendance' %}" class="link-card">
+                <h3>Attendance</h3>
+                <p>Record member attendance and check-ins.</p>
+            </a>
+            <a href="{% url 'payments' %}" class="link-card">
+                <h3>Payments</h3>
+                <p>Track plan fees and payment status.</p>
+            </a>
+            <a href="{% url 'equipment' %}" class="link-card">
+                <h3>Equipment</h3>
+                <p>Manage machines and gym equipment.</p>
+            </a>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Fitness</h2>
+        <div class="grid">
+            <a href="{% url 'workout' %}" class="link-card">
+                <h3>Gym Workout</h3>
+                <p>Machine and equipment based routines.</p>
+            </a>
+            <a href="{% url 'home_workout' %}" class="link-card">
+                <h3>Home Workout</h3>
+                <p>Bodyweight routines without machines.</p>
+            </a>
+            <a href="{% url 'diet' %}" class="link-card">
+                <h3>Diet</h3>
+                <p>Meal options by preference and goal.</p>
+            </a>
+            <a href="{% url 'progress' %}" class="link-card">
+                <h3>Progress</h3>
+                <p>View weight, attendance and goal progress.</p>
+            </a>
+            <a href="{% url 'ai_assistant' %}" class="link-card">
+                <h3>AI Assistant</h3>
+                <p>Use Free or Premium recommendations.</p>
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

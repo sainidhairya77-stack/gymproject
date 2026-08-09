@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="page-container">
+    <div class="page-header">
+        <h1>Equipment</h1>
+        <p>Manage gym machines and available equipment.</p>
+    </div>
+
+    <div class="stats">
+        <div class="stat">
+            <h3>Total Equipment</h3>
+            <div class="number">{{ equipment|length }}</div>
+        </div>
+        <div class="stat">
+            <h3>Total Units</h3>
+            <div class="number">{{ total_units }}</div>
+        </div>
+        <div class="stat">
+            <h3>Active Items</h3>
+            <div class="number">{{ active_equipment }}</div>
+        </div>
+        <div class="stat">
+            <h3>Action</h3>
+            <a href="{% url 'equipment_add' %}" class="button success">Add Equipment</a>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Equipment List</h2>
+        {% if equipment %}
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Units</th>
+                            <th>Price</th>
+                            <th>Purchase Date</th>
+                            <th>Status</th>
+                            <th>Description</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in equipment %}
+                            <tr>
+                                <td><strong>{{ item.name }}</strong></td>
+                                <td>{{ item.units }}</td>
+                                <td>Rs. {{ item.price }}</td>
+                                <td>{{ item.purchase_date }}</td>
+                                <td>
+                                    {% if item.is_active %}
+                                        <span class="status-good">Available</span>
+                                    {% else %}
+                                        <span class="status-bad">Inactive</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ item.description|default:"-" }}</td>
+                                <td>
+                                    <div class="actions">
+                                        <a href="{% url 'equipment_edit' item.pk %}" class="button">Edit</a>
+                                        <a href="{% url 'equipment_delete' item.pk %}" class="button danger">Delete</a>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="empty">No equipment records found.</div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

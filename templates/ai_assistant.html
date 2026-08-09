@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="page-container">
+    <div class="page-header">
+        <h1>FitZone AI Assistant</h1>
+        <p>Choose Free or Premium recommendations for gym workouts, home workouts and diet.</p>
+    </div>
+
+    <div class="section">
+        <h2>Your AI Access</h2>
+        {% if user_has_premium %}
+            <p><strong>Premium AI active.</strong> You can view detailed recommendations.</p>
+        {% else %}
+            <p><strong>Free AI active.</strong> Premium results are locked until your profile has a Premium AI plan.</p>
+        {% endif %}
+    </div>
+
+    <div class="section">
+        <h2>Build Recommendation</h2>
+        <form method="post">
+            {% csrf_token %}
+            <div class="grid">
+                <div class="field">
+                    <label for="plan">AI Plan</label>
+                    <select id="plan" name="plan">
+                        <option value="free" {% if selected_plan == "free" %}selected{% endif %}>Free AI</option>
+                        <option value="premium" {% if selected_plan == "premium" %}selected{% endif %}>Premium AI</option>
+                    </select>
+                </div>
+
+                <div class="field">
+                    <label for="feature">Feature</label>
+                    <select id="feature" name="feature">
+                        <option value="gym" {% if feature == "gym" %}selected{% endif %}>Gym Workout</option>
+                        <option value="home" {% if feature == "home" %}selected{% endif %}>Home Workout</option>
+                        <option value="diet" {% if feature == "diet" %}selected{% endif %}>Diet Assistant</option>
+                    </select>
+                </div>
+
+                <div class="field">
+                    <label for="diet">Diet Preference</label>
+                    <select id="diet" name="diet">
+                        {% for key, option in diet_options.items %}
+                            <option value="{{ key }}" {% if selected_diet == key %}selected{% endif %}>{{ option.label }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="field">
+                    <label for="goal">Goal</label>
+                    <select id="goal" name="goal">
+                        {% for key, option in goal_options.items %}
+                            <option value="{{ key }}" {% if selected_goal == key %}selected{% endif %}>{{ option.label }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="field">
+                    <label>&nbsp;</label>
+                    <button type="submit" class="button">Get Recommendation</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    {% if upgrade_required %}
+        <div class="section">
+            <h2>Premium Locked</h2>
+            <p>Your account does not currently have an active Premium AI plan, so FitZone is showing the Free version.</p>
+        </div>
+    {% endif %}
+
+    {% if recommendation %}
+        <div class="section">
+            <h2>{{ recommendation.title }}</h2>
+
+            {% if recommendation.meals %}
+                <p><strong>Preference:</strong> {{ recommendation.diet_label }}</p>
+                <p><strong>Goal:</strong> {{ recommendation.goal_label }}</p>
+                <p>{{ recommendation.goal_tip }}</p>
+
+                <div class="grid">
+                    {% for meal in recommendation.meals %}
+                        <div class="card">
+                            <h2>{{ meal.name }}</h2>
+                            {% for option in meal.options %}
+                                <div class="info-card">
+                                    <strong>Option {{ forloop.counter }}</strong>
+                                    <p>{{ option }}</p>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="grid">
+                    {% for section in recommendation.sections %}
+                        <div class="card">
+                            <h2>{{ section.section }}</h2>
+                            {% for item in section.items %}
+                                <div class="info-card">{{ item }}</div>
+                            {% endfor %}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <div class="section">
+                <h2>Notes</h2>
+                {% for note in recommendation.notes %}
+                    <p>{{ note }}</p>
+                {% endfor %}
+            </div>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

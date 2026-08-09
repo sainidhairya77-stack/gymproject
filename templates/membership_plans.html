@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="page-container">
+    <div class="page-header">
+        <h1>Membership Plans</h1>
+        <p>View gym membership and AI plan options.</p>
+    </div>
+
+    <div class="section">
+        <h2>Gym Membership Plans</h2>
+        {% if plans %}
+            <div class="grid">
+                {% for plan in plans %}
+                    <div class="card">
+                        <h2>{{ plan.name }}</h2>
+                        <p><strong>Fee:</strong> Rs. {{ plan.fee }}</p>
+                        <p><strong>Duration:</strong> {{ plan.duration_months }} month(s)</p>
+                        <p>{{ plan.description|default:"No description available." }}</p>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="empty">No gym membership plans found.</div>
+        {% endif %}
+    </div>
+
+    <div class="section">
+        <h2>AI Plans</h2>
+        {% if ai_plans %}
+            <div class="grid">
+                {% for ai in ai_plans %}
+                    <div class="card">
+                        <h2>{{ ai.name }}</h2>
+                        <p><strong>Price:</strong> Rs. {{ ai.price }}</p>
+                        <p><strong>Duration:</strong> {{ ai.duration_months }} month(s)</p>
+                        <p>{{ ai.description|default:"AI fitness assistance plan." }}</p>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="empty">No AI plans found.</div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

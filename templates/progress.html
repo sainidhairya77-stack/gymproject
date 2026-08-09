@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="page-container">
+    <div class="page-header">
+        <h1>Progress</h1>
+        <p>Track weight, attendance, goals and progress history.</p>
+    </div>
+
+    <div class="stats">
+        <div class="stat">
+            <h3>Current Weight</h3>
+            <div class="number">
+                {% if latest_progress.weight %}{{ latest_progress.weight }} kg{% else %}-{% endif %}
+            </div>
+        </div>
+        <div class="stat">
+            <h3>Weight Change</h3>
+            <div class="number">
+                {% if weight_change %}{{ weight_change }} kg{% else %}-{% endif %}
+            </div>
+        </div>
+        <div class="stat">
+            <h3>Attendance</h3>
+            <div class="number">{{ attendance_percentage }}%</div>
+        </div>
+        <div class="stat">
+            <h3>Goal</h3>
+            <div class="number">{{ goal }}</div>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="actions">
+            <a href="{% url 'progress_add' %}" class="button success">Add Progress</a>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Goal Progress</h2>
+        <p><strong>{{ progress_percentage }}%</strong> based on attendance consistency.</p>
+        <div style="height: 12px; background: #e5e7eb; border-radius: 8px; overflow: hidden;">
+            <div style="height: 12px; width: {{ progress_percentage }}%; background: #17233c;"></div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Progress Records</h2>
+        {% if progress_records %}
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Member</th>
+                            <th>Date</th>
+                            <th>Weight</th>
+                            <th>Body Fat</th>
+                            <th>Notes</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for record in progress_records %}
+                            <tr>
+                                <td>{{ record.member.full_name }}</td>
+                                <td>{{ record.recorded_date }}</td>
+                                <td>{% if record.weight %}{{ record.weight }} kg{% else %}-{% endif %}</td>
+                                <td>{% if record.body_fat %}{{ record.body_fat }}%{% else %}-{% endif %}</td>
+                                <td>{{ record.notes|default:"-" }}</td>
+                                <td>
+                                    <div class="actions">
+                                        <a href="{% url 'progress_edit' record.pk %}" class="button">Edit</a>
+                                        <a href="{% url 'progress_delete' record.pk %}" class="button danger">Delete</a>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="empty">No progress records found.</div>
+        {% endif %}
+    </div>
+
+    <div class="section">
+        <h2>Progress Recommendation</h2>
+        <p>{{ recommendation }}</p>
+    </div>
+</div>
+{% endblock %}

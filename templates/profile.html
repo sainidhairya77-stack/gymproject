@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="page-container">
+    <div class="page-header">
+        <h1>Profile</h1>
+        <p>View and update your member details.</p>
+    </div>
+
+    <div class="stats">
+        <div class="stat">
+            <h3>Name</h3>
+            <div>{{ profile.full_name }}</div>
+        </div>
+        <div class="stat">
+            <h3>Email</h3>
+            <div>{{ profile.email|default:user.email|default:"-" }}</div>
+        </div>
+        <div class="stat">
+            <h3>Gym Plan</h3>
+            <div>{{ profile.plan|default:"-" }}</div>
+        </div>
+        <div class="stat">
+            <h3>AI Plan</h3>
+            <div>{{ profile.ai_plan|default:"Free" }}</div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Edit Profile</h2>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.non_field_errors }}
+            {% for field in form %}
+                <div class="field">
+                    {{ field.label_tag }}
+                    {{ field }}
+                    {{ field.errors }}
+                </div>
+            {% endfor %}
+            <button type="submit" class="button">Save Profile</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="page-container">
+    <div class="page-header">
+        <h1>Attendance</h1>
+        <p>Track member attendance and check-in records.</p>
+    </div>
+
+    <div class="stats">
+        <div class="stat">
+            <h3>Total Records</h3>
+            <div class="number">{{ attendance|length }}</div>
+        </div>
+        <div class="stat">
+            <h3>Present</h3>
+            <div class="number">{{ present }}</div>
+        </div>
+        <div class="stat">
+            <h3>Absent</h3>
+            <div class="number">{{ absent }}</div>
+        </div>
+        <div class="stat">
+            <h3>Consistency</h3>
+            <div class="number">{{ attendance_percentage }}%</div>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="actions">
+            <a href="{% url 'attendance_add' %}" class="button success">Add Attendance</a>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Attendance Records</h2>
+        {% if attendance %}
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Member</th>
+                            <th>Date</th>
+                            <th>Status</th>
+                            <th>Check In</th>
+                            <th>Check Out</th>
+                            <th>Notes</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for record in attendance %}
+                            <tr>
+                                <td>{{ record.member.full_name }}</td>
+                                <td>{{ record.date }}</td>
+                                <td>
+                                    {% if record.status == "Present" %}
+                                        <span class="status-good">Present</span>
+                                    {% else %}
+                                        <span class="status-bad">Absent</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ record.check_in_time|default:"-" }}</td>
+                                <td>{{ record.check_out_time|default:"-" }}</td>
+                                <td>{{ record.notes|default:"-" }}</td>
+                                <td>
+                                    <div class="actions">
+                                        <a href="{% url 'attendance_edit' record.pk %}" class="button">Edit</a>
+                                        <a href="{% url 'attendance_delete' record.pk %}" class="button danger">Delete</a>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="empty">No attendance records found.</div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
