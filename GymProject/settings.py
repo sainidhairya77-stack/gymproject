@@ -25,7 +25,11 @@ SECRET_KEY = 'django-insecure--szbw+v1fl%phm^7$3*r!l-fs4asp1nn%m2y58jx-cxab7vha@
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    "gymproject-drab.vercel.app",
+    "localhost",
+    "127.0.0.1",
+]
 
 
 # Application definition
